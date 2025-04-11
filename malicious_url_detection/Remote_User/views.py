@@ -2,7 +2,7 @@ from django.db.models import Count
 from django.db.models import Q
 from django.shortcuts import render, redirect, get_object_or_404
 
-import pandas as pd
+import pandas as pdn
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report
 from sklearn.metrics import accuracy_score
