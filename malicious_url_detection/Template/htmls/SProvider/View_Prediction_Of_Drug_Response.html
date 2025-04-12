@@ -9,6 +9,12 @@
     --dark-color: #212529;
     --gray-color: #6c757d;
     --light-bg: #f8f9fa;
+    
+    /* Prediction type colors */
+    --safe-color: #10b981;       /* Green for safe/good URLs */
+    --warning-color: #f59e0b;    /* Yellow/Orange for suspicious URLs */
+    --danger-color: #ef4444;     /* Red for malicious/phishing URLs */
+    --neutral-color: #6b7280;    /* Gray for neutral/unknown URLs */
   }
 
   .url-details-container {
@@ -40,12 +46,14 @@
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
     margin-bottom: 30px;
+    width: 100%;
   }
   
   .url-table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 0;
+    table-layout: fixed;
   }
   
   .url-table th {
@@ -67,6 +75,7 @@
     background-color: white;
     font-size: 0.95rem;
     vertical-align: middle;
+    word-break: break-word;
   }
   
   .url-table tr:last-child td {
@@ -94,12 +103,65 @@
     resize: none;
     height: 100px;
     overflow-y: auto;
+    overflow-x: hidden;
+    display: block;
   }
   
   .prediction-value {
     font-weight: 600;
     font-size: 1rem;
-    color: #f72585;
+    display: block;
+    text-align: center;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+  
+  /* Prediction type styles */
+  .prediction-good, .prediction-safe, .prediction-legitimate {
+    color: var(--safe-color);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    background-color: rgba(16, 185, 129, 0.05);
+  }
+  
+  .prediction-suspicious, .prediction-warning {
+    color: var(--warning-color);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    background-color: rgba(245, 158, 11, 0.05);
+  }
+  
+  .prediction-malicious, .prediction-phishing, .prediction-bad {
+    color: var(--danger-color);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    background-color: rgba(239, 68, 68, 0.05);
+  }
+  
+  .prediction-neutral, .prediction-unknown {
+    color: var(--neutral-color);
+    border: 1px solid rgba(107, 114, 128, 0.3);
+    background-color: rgba(107, 114, 128, 0.05);
+  }
+  
+  /* Status icon */
+  .prediction-value::before {
+    font-family: "Font Awesome 5 Free";
+    margin-right: 8px;
+  }
+  
+  .prediction-good::before, .prediction-safe::before, .prediction-legitimate::before {
+    content: "\f00c";  /* check mark */
+  }
+  
+  .prediction-suspicious::before, .prediction-warning::before {
+    content: "\f071";  /* warning triangle */
+  }
+  
+  .prediction-malicious::before, .prediction-phishing::before, .prediction-bad::before {
+    content: "\f057";  /* times circle */
+  }
+  
+  .prediction-neutral::before, .prediction-unknown::before {
+    content: "\f128";  /* question mark */
   }
   
   .card-header-actions {
@@ -203,6 +265,43 @@
     opacity: 0.5;
   }
   
+  /* Legend */
+  .prediction-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .legend-item {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+  }
+  
+  .legend-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    margin-right: 8px;
+  }
+  
+  .legend-good {
+    background-color: var(--safe-color);
+  }
+  
+  .legend-warning {
+    background-color: var(--warning-color);
+  }
+  
+  .legend-danger {
+    background-color: var(--danger-color);
+  }
+  
+  .legend-neutral {
+    background-color: var(--neutral-color);
+  }
+  
   /* Responsive design */
   @media (max-width: 767.98px) {
     .card-header-actions {
@@ -218,6 +317,10 @@
     
     .export-btn {
       margin-bottom: 15px;
+    }
+    
+    .prediction-legend {
+      justify-content: space-between;
     }
   }
 </style>
@@ -238,13 +341,32 @@
     </div>
   </div>
   
+  <div class="prediction-legend">
+    <div class="legend-item">
+      <div class="legend-color legend-good"></div>
+      <span>Safe / Good</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color legend-warning"></div>
+      <span>Suspicious</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color legend-danger"></div>
+      <span>Malicious / Phishing</span>
+    </div>
+    <div class="legend-item">
+      <div class="legend-color legend-neutral"></div>
+      <span>Unknown / Neutral</span>
+    </div>
+  </div>
+  
   {% if list_objects %}
   <div class="url-table-wrapper">
     <table class="url-table" id="urlTable">
       <thead>
         <tr>
-          <th width="60%">URL Name</th>
-          <th width="40%">Prediction</th>
+          <th style="width: 60%">URL Name</th>
+          <th style="width: 40%">Prediction</th>
         </tr>
       </thead>
       <tbody>
@@ -254,7 +376,15 @@
             <div class="url-content">{{ object.urlname }}</div>
           </td>
           <td>
-            <div class="prediction-value">{{ object.Prediction }}</div>
+            {% if object.Prediction|lower == "good url" or object.Prediction|lower == "safe" or object.Prediction|lower == "legitimate" %}
+              <div class="prediction-value prediction-good">{{ object.Prediction }}</div>
+            {% elif object.Prediction|lower == "suspicious" or object.Prediction|lower == "warning" %}
+              <div class="prediction-value prediction-suspicious">{{ object.Prediction }}</div>
+            {% elif object.Prediction|lower == "malicious url" or object.Prediction|lower == "phishing" or object.Prediction|lower == "bad" %}
+              <div class="prediction-value prediction-malicious">{{ object.Prediction }}</div>
+            {% else %}
+              <div class="prediction-value prediction-neutral">{{ object.Prediction }}</div>
+            {% endif %}
           </td>
         </tr>
         {% endfor %}

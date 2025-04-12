@@ -1,85 +1,739 @@
 {% extends 'SProvider/Header.html' %}
 {% block researchblock %}
 
+<style>
+  :root {
+    --primary-color: #3a0ca3;
+    --secondary-color: #4361ee;
+    --accent-color: #f72585;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
+    --dark-color: #212529;
+    --light-color: #f8f9fa;
+    --gray-color: #6c757d;
+    --gradient-bg: linear-gradient(135deg, #3a0ca3, #4361ee);
+  }
 
-<link rel="icon" href="images/icon.png" type="image/x-icon" />
+  .cyber-security-container {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    padding: 2rem 0;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+  }
 
-	<link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css?family=Righteous" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css?family=Fredoka+One" rel="stylesheet">
+  .dashboard-card {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border-top: 4px solid var(--accent-color);
+  }
 
+  .dashboard-title {
+    font-family: 'Righteous', cursive;
+    color: var(--primary-color);
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    position: relative;
+    padding-bottom: 15px;
+  }
 
+  .dashboard-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: var(--accent-color);
+  }
 
-		<style>
-			body {background-color:#000000;}
-			.container-fluid {padding:50px;}
-			.container{background-color:white;padding:50px;   }
-			#title{font-family: 'Fredoka One', cursive;
-}
-			.text-uppercase{
-			font-family: 'Righteous', cursive;
+  /* Tabs styling */
+  .data-tabs {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    padding-bottom: 1rem;
+  }
 
-			}
-			.tweettext{
+  .tab-button {
+    background: none;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    margin: 0 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gray-color);
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+  }
 
-    border: 2px solid yellowgreen;
-    width: 1104px;
-    height: 442px;
-    overflow: scroll;
-    background-color:;
-}
-		.style1 {
-	color: #FF0000;
-	font-weight: bold;
-}
-.style7 {color: #FFFF00}
-        </style>
+  .tab-button.active {
+    color: var(--accent-color);
+    background-color: rgba(247, 37, 133, 0.1);
+  }
 
-	<body>
-	<<div class="container-fluid">
-		<div class="container">
+  .tab-button.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 3px;
+    background: var(--accent-color);
+  }
 
-			<div class="row">
-				<div class="col-md-5">
+  .tab-button:hover {
+    background-color: rgba(247, 37, 133, 0.05);
+  }
 
+  .tab-button i {
+    margin-right: 10px;
+  }
 
+  /* URL Table Styling */
+  .data-table-wrapper {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1.5rem;
+  }
 
- 					<form role="form" method="POST" >
-						{% csrf_token %}
-						<fieldset>
-                            <p align="center" class="text-uppercase pull-center style1">View URL Datasets Trained and Tested Results</p>
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    table-layout: fixed;
+  }
 
-                            <hr>
-                            <div>
-                               <table border="5" align="center" bordercolor="#FF00FF">
-                      <tr><td bgcolor="#FF0000"><div align="center"><span class="style10 style7">Model Type</span></div></td>
-                          <td bgcolor="#FF0000"><div align="center"><span class="style10 style7">Accuracy</span></div></td>
-                      </tr>
-                            {% for object in objs %}
-                      <tr>
-                                        <td bgcolor="#FFFFFF" style="color:red; font-size:20px; font-family:fantasy" ><div align="center">{{object.names}}</div></td>
-                                        <td bgcolor="#FF0000" style="font-family:monospace; font-size:19px; "><div align="center" class="style9"><span class="style7">{{object.ratio}}</span></div></td>
-                                 </tr>
+  .data-table th {
+    background: var(--gradient-bg);
+    color: white;
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+  }
 
-                                        {% endfor %}
-                      </table>
+  .data-table td {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    background-color: white;
+    vertical-align: middle;
+  }
 
+  .data-table tr:last-child td {
+    border-bottom: none;
+  }
 
+  .data-table tr:hover td {
+    background-color: rgba(67, 97, 238, 0.03);
+  }
 
-                            </div>
+  /* URL Content Styling */
+  .url-content {
+    padding: 0.8rem;
+    background-color: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    max-height: 100px;
+    overflow-y: auto;
+    word-break: break-all;
+  }
 
+  /* Prediction Styling */
+  .prediction-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    text-align: center;
+  }
 
+  .prediction-safe {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: var(--success-color);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+  }
 
+  .prediction-suspicious {
+    background-color: rgba(245, 158, 11, 0.15);
+    color: var(--warning-color);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+  }
 
-						</fieldset>
-					</form>
-				</div>
+  .prediction-malicious {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: var(--danger-color);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+  }
 
-				<div class="col-md-2">
-					<!-------null------>
-				</div>
-            </div>
+  .prediction-neutral {
+    background-color: rgba(107, 114, 128, 0.15);
+    color: var(--gray-color);
+    border: 1px solid rgba(107, 114, 128, 0.3);
+  }
+
+  .prediction-badge i {
+    margin-right: 8px;
+  }
+
+  /* Model Performance Section */
+  .model-performance-wrapper {
+    background-color: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  }
+
+  .model-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .model-table th {
+    background: var(--gradient-bg);
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    font-weight: 600;
+    font-family: 'Righteous', cursive;
+    font-size: 1rem;
+  }
+
+  .model-table td {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .model-name {
+    font-weight: 600;
+    color: var(--dark-color);
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .model-name i {
+    margin-right: 10px;
+    color: var(--primary-color);
+  }
+
+  .accuracy-value {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--accent-color);
+    position: relative;
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    background-color: rgba(247, 37, 133, 0.1);
+  }
+
+  /* Search and Filter */
+  .controls-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .search-filter-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .search-box {
+    position: relative;
+  }
+
+  .search-input {
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50px;
+    font-size: 0.9rem;
+    width: 250px;
+    transition: all 0.3s ease;
+  }
+
+  .search-input:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+    width: 280px;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-color);
+  }
+
+  .filter-dropdown {
+    padding: 0.75rem 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50px;
+    font-size: 0.9rem;
+    color: var(--dark-color);
+    background-color: white;
+    transition: all 0.3s ease;
+  }
+
+  .filter-dropdown:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .action-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    border: none;
+    cursor: pointer;
+  }
+
+  .export-btn {
+    background-color: var(--secondary-color);
+    color: white;
+  }
+
+  .export-btn:hover {
+    background-color: var(--primary-color);
+    transform: translateY(-2px);
+  }
+
+  .action-btn i {
+    margin-right: 8px;
+  }
+
+  /* Pagination */
+  .pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.5rem;
+  }
+
+  .pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .page-item {
+    margin: 0 0.25rem;
+  }
+
+  .page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 0.9rem;
+    color: var(--dark-color);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .page-item.active .page-link {
+    background-color: var(--accent-color);
+    color: white;
+    border-color: var(--accent-color);
+  }
+
+  .page-link:hover:not(.active) {
+    background-color: rgba(67, 97, 238, 0.1);
+    color: var(--primary-color);
+  }
+
+  /* Status summary */
+  .status-summary {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .status-card {
+    flex: 1;
+    min-width: 200px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .status-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .status-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+  }
+
+  .status-safe {
+    background-color: rgba(16, 185, 129, 0.15);
+    color: var(--success-color);
+  }
+
+  .status-suspicious {
+    background-color: rgba(245, 158, 11, 0.15);
+    color: var(--warning-color);
+  }
+
+  .status-malicious {
+    background-color: rgba(239, 68, 68, 0.15);
+    color: var(--danger-color);
+  }
+
+  .status-total {
+    background-color: rgba(59, 130, 246, 0.15);
+    color: var(--secondary-color);
+  }
+
+  .status-count {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+
+  .status-label {
+    font-size: 0.9rem;
+    color: var(--gray-color);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+  }
+
+  /* Responsive Design */
+  @media (max-width: 991.98px) {
+    .dashboard-card {
+      padding: 1.5rem;
+    }
+    
+    .controls-wrapper {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .search-filter-container, .action-buttons {
+      width: 100%;
+      justify-content: space-between;
+    }
+    
+    .search-input {
+      width: 100%;
+    }
+    
+    .search-input:focus {
+      width: 100%;
+    }
+    
+    .search-box {
+      flex: 1;
+    }
+  }
+
+  @media (max-width: 767.98px) {
+    .status-summary {
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .status-card {
+      width: 100%;
+    }
+    
+    .tab-button {
+      padding: 0.6rem 1rem;
+      font-size: 0.9rem;
+      margin: 0 0.25rem;
+    }
+    
+    .data-table th, .data-table td {
+      padding: 0.75rem;
+    }
+  }
+</style>
+
+<div class="cyber-security-container">
+  <div class="container">
+    <!-- <div class="dashboard-card">
+      <h2 class="dashboard-title">URL Security Analysis Dashboard</h2>
+      
+      <div class="data-tabs">
+        <button class="tab-button active">
+          <i class="fas fa-link"></i>URL Analysis
+        </button>
+        <button class="tab-button">
+          <i class="fas fa-chart-line"></i>Model Performance
+        </button>
+        <button class="tab-button">
+          <i class="fas fa-shield-alt"></i>Security Report
+        </button>
+      </div>
+      
+      <div class="status-summary">
+        <div class="status-card">
+          <div class="status-icon status-total">
+            <i class="fas fa-globe"></i>
+          </div>
+          <div class="status-count">487</div>
+          <div class="status-label">Total URLs</div>
         </div>
+        <div class="status-card">
+          <div class="status-icon status-safe">
+            <i class="fas fa-check-circle"></i>
+          </div>
+          <div class="status-count">325</div>
+          <div class="status-label">Safe URLs</div>
+        </div>
+        <div class="status-card">
+          <div class="status-icon status-suspicious">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <div class="status-count">98</div>
+          <div class="status-label">Suspicious</div>
+        </div>
+        <div class="status-card">
+          <div class="status-icon status-malicious">
+            <i class="fas fa-ban"></i>
+          </div>
+          <div class="status-count">64</div>
+          <div class="status-label">Malicious</div>
+        </div>
+      </div>
+      
+      <div class="controls-wrapper">
+        <div class="search-filter-container">
+          <div class="search-box">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" class="search-input" placeholder="Search URLs..." id="urlSearch">
+          </div>
+          
+          <select class="filter-dropdown">
+            <option value="all">All URLs</option>
+            <option value="safe">Safe URLs</option>
+            <option value="suspicious">Suspicious URLs</option>
+            <option value="malicious">Malicious URLs</option>
+          </select>
+        </div>
+        
+        <div class="action-buttons">
+          <button class="action-btn export-btn">
+            <i class="fas fa-file-export"></i>Export Results
+          </button>
+        </div>
+      </div>
+      
+      {% if list_objects %}
+      <div class="data-table-wrapper">
+        <table class="data-table" id="urlTable">
+          <thead>
+            <tr>
+              <th style="width: 60%">URL</th>
+              <th style="width: 40%">Security Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for object in list_objects %}
+            <tr>
+              <td>
+                <div class="url-content">{{ object.urlname }}</div>
+              </td>
+              <td>
+                {% if object.Prediction|lower == "good" or object.Prediction|lower == "safe" or object.Prediction|lower == "legitimate" %}
+                <div class="prediction-badge prediction-safe">
+                  <i class="fas fa-check-circle"></i> {{ object.Prediction }}
+                </div>
+                {% elif object.Prediction|lower == "suspicious" or object.Prediction|lower == "warning" %}
+                <div class="prediction-badge prediction-suspicious">
+                  <i class="fas fa-exclamation-triangle"></i> {{ object.Prediction }}
+                </div>
+                {% elif object.Prediction|lower == "malicious" or object.Prediction|lower == "phishing" or object.Prediction|lower == "bad" %}
+                <div class="prediction-badge prediction-malicious">
+                  <i class="fas fa-ban"></i> {{ object.Prediction }}
+                </div>
+                {% else %}
+                <div class="prediction-badge prediction-neutral">
+                  <i class="fas fa-question-circle"></i> {{ object.Prediction }}
+                </div>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      
+      <div class="pagination-container">
+        <ul class="pagination">
+          <li class="page-item disabled">
+            <a class="page-link" href="#" aria-label="Previous">
+              <i class="fas fa-chevron-left"></i>
+            </a>
+          </li>
+          <li class="page-item active"><a class="page-link" href="#">1</a></li>
+          <li class="page-item"><a class="page-link" href="#">2</a></li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item">
+            <a class="page-link" href="#" aria-label="Next">
+              <i class="fas fa-chevron-right"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+      {% else %}
+      <div class="text-center py-5">
+        <i class="fas fa-link-slash fa-4x text-muted mb-3"></i>
+        <h3>No URLs Found</h3>
+        <p class="text-muted">There are currently no URL records in the system.</p>
+      </div>
+      {% endif %}
+    </div> -->
+    
+    <!-- Model Performance Card -->
+    <div class="dashboard-card">
+      <h2 class="dashboard-title">Model Performance Metrics</h2>
+      
+      <div class="model-performance-wrapper">
+        <table class="model-table">
+          <thead>
+            <tr>
+              <th>Model Type</th>
+              <th>Accuracy</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for object in objs %}
+            <tr>
+              <td>
+                <div class="model-name">
+                  <i class="fas fa-robot"></i>{{ object.names }}
+                </div>
+              </td>
+              <td>
+                <div class="accuracy-value">{{ object.ratio }}</div>
+              </td>
+            </tr>
+            {% endfor %}
+            <!-- Example rows if objs is empty -->
+            {% if not objs %}
+            <tr>
+              <td>
+                <div class="model-name">
+                  <i class="fas fa-robot"></i>Neural Network
+                </div>
+              </td>
+              <td>
+                <div class="accuracy-value">95.7%</div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="model-name">
+                  <i class="fas fa-robot"></i>Random Forest
+                </div>
+              </td>
+              <td>
+                <div class="accuracy-value">92.3%</div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="model-name">
+                  <i class="fas fa-robot"></i>SVM
+                </div>
+              </td>
+              <td>
+                <div class="accuracy-value">89.5%</div>
+              </td>
+            </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
     </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Search functionality
+    const searchField = document.getElementById('urlSearch');
+    const table = document.getElementById('urlTable');
+    
+    if (searchField && table) {
+      searchField.addEventListener('keyup', function() {
+        const searchValue = this.value.toLowerCase();
+        const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+        
+        for (let i = 0; i < rows.length; i++) {
+          const rowText = rows[i].textContent.toLowerCase();
+          rows[i].style.display = rowText.includes(searchValue) ? '' : 'none';
+        }
+      });
+    }
+    
+    // Tab switching (just visual, not functional in this demo)
+    const tabButtons = document.querySelectorAll('.tab-button');
+    
+    tabButtons.forEach(button => {
+      button.addEventListener('click', function() {
+        tabButtons.forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+  });
+</script>
+
 {% endblock %}
-    <tr>

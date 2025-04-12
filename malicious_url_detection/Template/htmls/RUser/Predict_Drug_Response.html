@@ -1,5 +1,347 @@
 {% extends 'RUser/Header.html' %}
 {% block userblock %}
+<style>
+  /* Cyber Hacker Animation Styles */
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+  
+  /* Main Overlay */
+  .cyber-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 10, 20, 0.9);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s linear 0.2s, opacity 0.2s;
+    font-family: 'Share Tech Mono', monospace;
+    overflow: hidden;
+  }
+  
+  .cyber-overlay.show {
+    visibility: visible;
+    opacity: 1;
+    transition-delay: 0s;
+  }
+  
+  /* Main scanner container */
+  .cyber-scanner {
+    width: 90%;
+    max-width: 800px;
+    background-color: #0a0d12;
+    border: 1px solid #30cfd0;
+    box-shadow: 0 0 20px rgba(48, 207, 208, 0.5), 
+                0 0 40px rgba(48, 207, 208, 0.3), 
+                inset 0 0 10px rgba(48, 207, 208, 0.2);
+    border-radius: 5px;
+    padding: 25px;
+    position: relative;
+    overflow: hidden;
+    color: #30cfd0;
+  }
+  
+  /* Glitch effect for text */
+  @keyframes glitch {
+    0% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(-2px, -2px); }
+    60% { transform: translate(2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+    100% { transform: translate(0); }
+  }
+  
+  /* Scanning animation */
+  @keyframes scan {
+    0% { 
+      background-position: 0% 0%;
+      opacity: 0.1;
+    }
+    50% { 
+      background-position: 100% 0%;
+      opacity: 0.3; 
+    }
+    100% { 
+      background-position: 0% 0%;
+      opacity: 0.1;
+    }
+  }
+  
+  .scan-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(48, 207, 208, 0.1) 50%, 
+                transparent 100%);
+    background-size: 200% 100%;
+    animation: scan 2s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+  }
+  
+  /* Terminal text animation */
+  .terminal-text {
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: rgba(0, 10, 20, 0.3);
+    border: 1px solid rgba(48, 207, 208, 0.3);
+    border-radius: 3px;
+    margin-bottom: 20px;
+    z-index: 2;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+  
+  .terminal-line {
+    margin: 0;
+    padding: 3px 0;
+    color: #dddddd;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.1s ease;
+  }
+  
+  .terminal-line.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .terminal-line .path {
+    color: #4cc4c4;
+  }
+  
+  .terminal-line .success {
+    color: #0dbc79;
+  }
+  
+  .terminal-line .warning {
+    color: #ff9100;
+  }
+  
+  .terminal-line .error {
+    color: #ff2557;
+  }
+  
+  .terminal-line .command {
+    color: #ff468d;
+  }
+  
+  /* Progress bars */
+  .cyber-progress-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 25px;
+    z-index: 2;
+    position: relative;
+  }
+  
+  .cyber-progress-item {
+    width: 100%;
+  }
+  
+  .cyber-progress-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-size: 14px;
+  }
+  
+  .cyber-progress-bar {
+    height: 10px;
+    width: 100%;
+    background-color: rgba(48, 207, 208, 0.1);
+    border: 1px solid rgba(48, 207, 208, 0.3);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .cyber-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #30cfd0, #c43ad6);
+    position: relative;
+    transition: width 0.5s ease;
+  }
+  
+  .cyber-progress-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255, 255, 255, 0.2) 50%, 
+                transparent 100%);
+    animation: scan 1s linear infinite;
+  }
+  
+  /* Hexagon grid animation */
+  .hex-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    opacity: 0.1;
+    overflow: hidden;
+  }
+  
+  .hex-row {
+    display: flex;
+    margin-top: -8px;
+  }
+  
+  .hex-row.even {
+    margin-left: 15px;
+  }
+  
+  .hex {
+    width: 30px;
+    height: 17px;
+    background-color: transparent;
+    border: 1px solid #30cfd0;
+    position: relative;
+    margin: 0 1px;
+    opacity: 0.5;
+    transform: rotate(90deg);
+  }
+  
+  .hex:before, .hex:after {
+    content: '';
+    position: absolute;
+    width: 0;
+    border-left: 15px solid transparent;
+    border-right: 15px solid transparent;
+  }
+  
+  .hex:before {
+    bottom: 100%;
+    border-bottom: 8.7px solid #30cfd0;
+  }
+  
+  .hex:after {
+    top: 100%;
+    border-top: 8.7px solid #30cfd0;
+  }
+  
+  .hex.pulse {
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+  }
+  
+  /* Status title */
+  .status-title {
+    text-align: center;
+    margin-bottom: 25px;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .status-title h3 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+    color: #30cfd0;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    animation: glitch 5s infinite;
+    text-shadow: 0 0 5px #30cfd0, 0 0 10px #30cfd0;
+  }
+  
+  .status-title p {
+    margin-top: 10px;
+    color: #dddddd;
+    font-size: 14px;
+  }
+  
+  /* Binary rain effect */
+  .binary-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    opacity: 0.05;
+    z-index: 0;
+  }
+  
+  .binary-digit {
+    position: absolute;
+    color: #30cfd0;
+    font-size: 14px;
+    opacity: 0;
+    animation: binary-fall linear infinite;
+  }
+  
+  @keyframes binary-fall {
+    0% {
+      transform: translateY(-100px);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(800px);
+      opacity: 0;
+    }
+  }
+  
+  /* Decision animation */
+  .decision-container {
+    text-align: center;
+    padding: 20px;
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(48, 207, 208, 0.3);
+    margin-top: 20px;
+    position: relative;
+    z-index: 2;
+    display: none;
+  }
+  
+  .decision-container.show {
+    display: block;
+  }
+  
+  .decision-indicator {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  
+  .decision-safe {
+    color: #0dbc79;
+    text-shadow: 0 0 5px #0dbc79, 0 0 10px #0dbc79;
+  }
+  
+  .decision-malicious {
+    color: #ff2557;
+    text-shadow: 0 0 5px #ff2557, 0 0 10px #ff2557;
+  }
+</style>
+
 <div class="animate-fade-in-up" style="animation-delay: 0.2s;">
     <div class="content-card">
         <div class="row">
@@ -7,7 +349,7 @@
                 <h2 class="card-title">Predict URL Status</h2>
                 <p class="text-muted mb-4">Enter a URL to analyze and detect if it's malicious or safe.</p>
                 
-                <form role="form" method="POST">
+                <form role="form" method="POST" id="urlAnalysisForm">
                     {% csrf_token %}
                     <div class="mb-4">
                         <label for="url-input" class="form-label">Enter URL To Analyze</label>
@@ -21,7 +363,7 @@
                     </div>
                     
                     <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-                        <button type="submit" name="submit" class="btn btn-primary">
+                        <button type="submit" name="submit" class="btn btn-primary" id="analyzeBtn">
                             <i class="fas fa-search me-2"></i> Analyze URL
                         </button>
                     </div>
@@ -78,4 +420,307 @@
         </div>
     </div>
 </div>
+
+<!-- Cyber Hacker Animation Overlay -->
+<div class="cyber-overlay" id="cyberOverlay">
+    <div class="cyber-scanner">
+        <!-- Hexagon background pattern -->
+        <div class="hex-background" id="hexBackground">
+            <!-- Will be filled by JS -->
+        </div>
+        
+        <!-- Binary Rain effect -->
+        <div class="binary-container" id="binaryContainer">
+            <!-- Will be filled by JS -->
+        </div>
+        
+        <!-- Scanning line effect -->
+        <div class="scan-line"></div>
+        
+        <!-- Status title -->
+        <div class="status-title">
+            <h3>Deep URL Scan In Progress</h3>
+            <p id="statusText">Initiating advanced cybersecurity protocols...</p>
+        </div>
+        
+        <!-- Terminal text output -->
+        <div class="terminal-text" id="terminalOutput">
+            <!-- Terminal output lines will be added by JS -->
+        </div>
+        
+        <!-- Progress bars -->
+        <div class="cyber-progress-bars">
+            <div class="cyber-progress-item">
+                <div class="cyber-progress-label">
+                    <span>URL Validation</span>
+                    <span id="progressValidation">0%</span>
+                </div>
+                <div class="cyber-progress-bar">
+                    <div class="cyber-progress-fill" id="progressBarValidation"></div>
+                </div>
+            </div>
+            
+            <div class="cyber-progress-item">
+                <div class="cyber-progress-label">
+                    <span>Domain Analysis</span>
+                    <span id="progressDomain">0%</span>
+                </div>
+                <div class="cyber-progress-bar">
+                    <div class="cyber-progress-fill" id="progressBarDomain"></div>
+                </div>
+            </div>
+            
+            <div class="cyber-progress-item">
+                <div class="cyber-progress-label">
+                    <span>Threat Detection</span>
+                    <span id="progressThreat">0%</span>
+                </div>
+                <div class="cyber-progress-bar">
+                    <div class="cyber-progress-fill" id="progressBarThreat"></div>
+                </div>
+            </div>
+            
+            <div class="cyber-progress-item">
+                <div class="cyber-progress-label">
+                    <span>AI Analysis</span>
+                    <span id="progressAI">0%</span>
+                </div>
+                <div class="cyber-progress-bar">
+                    <div class="cyber-progress-fill" id="progressBarAI"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Final decision container -->
+        <div class="decision-container" id="decisionContainer">
+            <div class="decision-indicator" id="decisionText">ANALYZING</div>
+            <p id="decisionDesc">Please wait while we finalize our security assessment...</p>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('urlAnalysisForm');
+    const overlay = document.getElementById('cyberOverlay');
+    const terminalOutput = document.getElementById('terminalOutput');
+    const hexBackground = document.getElementById('hexBackground');
+    const binaryContainer = document.getElementById('binaryContainer');
+    const statusText = document.getElementById('statusText');
+    const decisionContainer = document.getElementById('decisionContainer');
+    const decisionText = document.getElementById('decisionText');
+    const decisionDesc = document.getElementById('decisionDesc');
+    
+    // Progress bar elements
+    const progressBarValidation = document.getElementById('progressBarValidation');
+    const progressBarDomain = document.getElementById('progressBarDomain');
+    const progressBarThreat = document.getElementById('progressBarThreat');
+    const progressBarAI = document.getElementById('progressBarAI');
+    
+    const progressValidation = document.getElementById('progressValidation');
+    const progressDomain = document.getElementById('progressDomain');
+    const progressThreat = document.getElementById('progressThreat');
+    const progressAI = document.getElementById('progressAI');
+
+    // Generate hexagon grid
+    function generateHexGrid() {
+        hexBackground.innerHTML = '';
+        const rows = 10;
+        const hexesPerRow = 20;
+        
+        for (let i = 0; i < rows; i++) {
+            const rowElement = document.createElement('div');
+            rowElement.className = i % 2 === 0 ? 'hex-row even' : 'hex-row';
+            
+            for (let j = 0; j < hexesPerRow; j++) {
+                const hex = document.createElement('div');
+                hex.className = 'hex';
+                
+                // Randomly make some hexes pulse
+                if (Math.random() < 0.1) {
+                    hex.classList.add('pulse');
+                }
+                
+                rowElement.appendChild(hex);
+            }
+            
+            hexBackground.appendChild(rowElement);
+        }
+    }
+    
+    // Create binary rain effect
+    function createBinaryRain() {
+        for (let i = 0; i < 75; i++) {
+            setTimeout(() => {
+                const binary = document.createElement('div');
+                binary.className = 'binary-digit';
+                binary.textContent = Math.random() < 0.5 ? '0' : '1';
+                
+                // Random position and speed
+                const posX = Math.floor(Math.random() * 100);
+                const duration = Math.random() * 3 + 2;
+                const delay = Math.random() * 10;
+                
+                binary.style.left = `${posX}%`;
+                binary.style.animationDuration = `${duration}s`;
+                binary.style.animationDelay = `${delay}s`;
+                
+                binaryContainer.appendChild(binary);
+            }, i * 100);
+        }
+    }
+    
+    // Add terminal text line
+    function addTerminalLine(text, style = '') {
+        const line = document.createElement('p');
+        line.className = 'terminal-line';
+        line.innerHTML = text;
+        if (style) line.classList.add(style);
+        
+        terminalOutput.appendChild(line);
+        
+        // Force reflow to trigger animation
+        void line.offsetWidth;
+        line.classList.add('show');
+        
+        // Scroll to bottom
+        terminalOutput.scrollTop = terminalOutput.scrollHeight;
+        
+        return new Promise(resolve => setTimeout(resolve, 150));
+    }
+    
+    // Update progress bar
+    function updateProgress(element, textElement, value) {
+        element.style.width = `${value}%`;
+        textElement.textContent = `${value}%`;
+    }
+    
+    // Main animation sequence
+    async function runAnalysisAnimation() {
+        overlay.classList.add('show');
+        
+        // Generate hex grid and binary rain
+        generateHexGrid();
+        createBinaryRain();
+        
+        // Start terminal output sequence
+        await addTerminalLine('<span class="path">root@secure-analysis:</span><span class="command">~$</span> ./start_url_scan.sh');
+        await addTerminalLine('Initializing deep URL scanning engine v3.4.2...', 'success');
+        await addTerminalLine('Loading cybersecurity modules...', 'success');
+        
+        // Start validation progress
+        let urlInput = document.getElementById('url-input').value || 'https://example.com';
+        
+        statusText.textContent = "Running primary validation checks...";
+        
+        for (let i = 0; i <= 100; i += 5) {
+            updateProgress(progressBarValidation, progressValidation, i);
+            if (i === 25) {
+                await addTerminalLine(`<span class="path">root@secure-analysis:</span><span class="command">~$</span> validate_url "${urlInput}"`);
+            }
+            if (i === 50) {
+                await addTerminalLine('Checking URL format and structure...', 'success');
+            }
+            if (i === 75) {
+                await addTerminalLine('Validating protocol security...', 'success');
+            }
+            await new Promise(resolve => setTimeout(resolve, 20));
+        }
+        
+        await addTerminalLine('URL validation complete. Starting domain analysis...', 'success');
+        
+        // Start domain analysis progress
+        statusText.textContent = "Analyzing domain reputation...";
+        
+        for (let i = 0; i <= 100; i += 4) {
+            updateProgress(progressBarDomain, progressDomain, i);
+            if (i === 20) {
+                await addTerminalLine(`<span class="path">root@secure-analysis:</span><span class="command">~$</span> analyze_domain "${new URL(urlInput).hostname}"`);
+            }
+            if (i === 40) {
+                await addTerminalLine('Checking WHOIS database...', 'success');
+            }
+            if (i === 60) {
+                await addTerminalLine('Analyzing registration data...', 'success');
+            }
+            if (i === 80) {
+                await addTerminalLine('Cross-referencing with threat intelligence databases...', 'warning');
+            }
+            await new Promise(resolve => setTimeout(resolve, 25));
+        }
+        
+        await addTerminalLine('Domain analysis complete. Initiating threat detection...', 'success');
+        
+        // Start threat detection progress
+        statusText.textContent = "Running threat detection algorithms...";
+        
+        for (let i = 0; i <= 100; i += 3) {
+            updateProgress(progressBarThreat, progressThreat, i);
+            if (i === 15) {
+                await addTerminalLine(`<span class="path">root@secure-analysis:</span><span class="command">~$</span> scan_patterns --deepmode "${urlInput}"`);
+            }
+            if (i === 30) {
+                await addTerminalLine('Searching for phishing indicators...', 'success');
+            }
+            if (i === 45) {
+                await addTerminalLine('Checking for malware distribution patterns...', 'success');
+            }
+            if (i === 60) {
+                await addTerminalLine('Analyzing redirect chains...', 'warning');
+            }
+            if (i === 80) {
+                await addTerminalLine('Examining path traversal vulnerabilities...', 'success');
+            }
+            await new Promise(resolve => setTimeout(resolve, 30));
+        }
+        
+        await addTerminalLine('Threat detection complete. Deploying AI analysis...', 'success');
+        
+        // Start AI analysis progress
+        statusText.textContent = "Running advanced AI pattern recognition...";
+        
+        for (let i = 0; i <= 100; i += 2) {
+            updateProgress(progressBarAI, progressAI, i);
+            if (i === 10) {
+                await addTerminalLine(`<span class="path">root@secure-analysis:</span><span class="command">~$</span> deploy_ai_model --layers 24 --mode full "${urlInput}"`);
+            }
+            if (i === 25) {
+                await addTerminalLine('NeuralScan v2.3 initialized...', 'success');
+            }
+            if (i === 40) {
+                await addTerminalLine('Processing through convolutional layers...', 'success');
+            }
+            if (i === 60) {
+                await addTerminalLine('Correlating with historical threat data...', 'success');
+            }
+            if (i === 80) {
+                await addTerminalLine('Generating probability scores...', 'success');
+            }
+            await new Promise(resolve => setTimeout(resolve, 35));
+        }
+        
+        await addTerminalLine('AI analysis complete. Compiling final security assessment...', 'success');
+        
+        // Show decision container
+        decisionContainer.classList.add('show');
+        statusText.textContent = "Finalizing security assessment...";
+        
+        // Random decision for demo purposes (actual decision would come from backend)
+        // This won't affect the actual form submission result, it's just visual
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        await addTerminalLine('<span class="path">root@secure-analysis:</span><span class="command">~$</span> compile_results --format detailed');
+        await addTerminalLine('Gathering all analysis metrics...');
+        await addTerminalLine('Calculating confidence score...');
+        await addTerminalLine('Assessment complete. Scan report generated.', 'success');
+                
+        // Let the form submit naturally to show the real results from backend
+    }
+    
+    form.addEventListener('submit', function(e) {
+        // Don't prevent default - form should still submit
+        runAnalysisAnimation();
+    });
+});
+</script>
 {% endblock %}
