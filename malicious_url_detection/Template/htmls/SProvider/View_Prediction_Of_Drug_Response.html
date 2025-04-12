@@ -1,83 +1,313 @@
 {% extends 'SProvider/Header.html' %}
 {% block researchblock %}
 
+<style>
+  :root {
+    --primary-color: #4361ee;
+    --secondary-color: #3a0ca3;
+    --accent-color: #f72585;
+    --dark-color: #212529;
+    --gray-color: #6c757d;
+    --light-bg: #f8f9fa;
+  }
 
-<link rel="icon" href="images/icon.png" type="image/x-icon" />
+  .url-details-container {
+    padding: 30px 0;
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  }
+  
+  .section-header {
+    margin-bottom: 25px;
+    position: relative;
+    padding-bottom: 15px;
+    display: inline-block;
+    color: var(--dark-color);
+    font-weight: 600;
+  }
+  
+  .section-header:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: var(--accent-color);
+  }
+  
+  .url-table-wrapper {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    margin-bottom: 30px;
+  }
+  
+  .url-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 0;
+  }
+  
+  .url-table th {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    padding: 15px;
+    letter-spacing: 0.5px;
+    border: none;
+    text-align: left;
+  }
+  
+  .url-table td {
+    padding: 15px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    color: var(--dark-color);
+    background-color: white;
+    font-size: 0.95rem;
+    vertical-align: middle;
+  }
+  
+  .url-table tr:last-child td {
+    border-bottom: none;
+  }
+  
+  .url-table tbody tr {
+    transition: all 0.2s ease;
+  }
+  
+  .url-table tbody tr:hover {
+    background-color: rgba(67, 97, 238, 0.03);
+  }
+  
+  .url-content {
+    width: 100%;
+    max-width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    padding: 10px;
+    font-family: monospace;
+    font-size: 14px;
+    background-color: #f7f7f9;
+    color: #333;
+    resize: none;
+    height: 100px;
+    overflow-y: auto;
+  }
+  
+  .prediction-value {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #f72585;
+  }
+  
+  .card-header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  
+  .search-container {
+    margin-bottom: 20px;
+    position: relative;
+    max-width: 400px;
+    width: 100%;
+  }
+  
+  .search-field {
+    width: 100%;
+    padding: 12px 20px;
+    padding-right: 40px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50px;
+    outline: none;
+    transition: all 0.3s ease;
+  }
+  
+  .search-field:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+  }
+  
+  .search-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-color);
+  }
+  
+  .export-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 50px;
+    padding: 8px 20px;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    border: none;
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+  
+  .export-btn:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+    color: white;
+    text-decoration: none;
+  }
+  
+  .export-btn i {
+    margin-right: 8px;
+  }
+  
+  .pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .page-link {
+    color: var(--primary-color);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    margin: 0 3px;
+  }
+  
+  .page-link:hover {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+  }
+  
+  .page-item.active .page-link {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+  }
+  
+  .no-data {
+    padding: 50px;
+    text-align: center;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  }
+  
+  .no-data i {
+    font-size: 3rem;
+    color: var(--gray-color);
+    margin-bottom: 15px;
+    opacity: 0.5;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 767.98px) {
+    .card-header-actions {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .search-container {
+      width: 100%;
+      max-width: 100%;
+      margin-bottom: 15px;
+    }
+    
+    .export-btn {
+      margin-bottom: 15px;
+    }
+  }
+</style>
 
-	<link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css?family=Righteous" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css?family=Fredoka+One" rel="stylesheet">
-
-
-
-		<style>
-			body {background-color:#000000;}
-			.container-fluid {padding:50px;}
-			.container{background-color:white;padding:50px;   }
-			#title{font-family: 'Fredoka One', cursive;
-}
-			.text-uppercase{
-			font-family: 'Righteous', cursive;
-
-			}
-			.tweettext{
-
-    border: 2px solid yellowgreen;
-    width: 1104px;
-    height: 442px;
-    overflow: scroll;
-    background-color:;
-}
-		.style1 {
-	color: #FF0000;
-	font-weight: bold;
-}
-.style12 {color: #FFFF00; font-weight: bold; }
-        </style>
-
-	<body>
-	<div class="container-fluid">
-		<div class="container">
-
-			<div class="row">
-				<div class="col-md-5">
- 					<form role="form" method="POST" >
-						{% csrf_token %}
-						<fieldset>
-							<p class="text-uppercase pull-center style1">View URL Type Details  !!! </p>
-                            <hr>
-                            <div >
-                               <table border="0" align="center" bordercolor="#FF00FF">
-
-
-                                   <tr><td width="157" bgcolor="#FF0000"><div align="center" class="style12"><span class="style8 style6">URL Name</span></div></td>
-                                       <td width="211" bgcolor="#FF0000"><div align="center" class="style12"><span class="style8 style6">Prediction</span></div></td>
-
-                      </tr>
-                            {% for object in list_objects %}
-                      <tr>
-                          <td bgcolor="#FFFFFF" style="color:red; font-size:20px; font-family:fantasy" ><textarea cols="50" rows="4">{{object.urlname}}</textarea></td>
-
-                    <td bgcolor="#FFFFFF" style="color:red; font-size:20px; font-family:fantasy" >{{object.Prediction}}</td>
-                        </tr>
-
-                                        {% endfor %}
-                      </table>
-
-                            </div>
-
-
-
-
-						</fieldset>
-					</form>
-				</div>
-
-				<div class="col-md-2">
-					<!-------null------>
-				</div>
-            </div>
-        </div>
+<div class="url-details-container">
+  <div class="card-header-actions">
+    <h2 class="section-header">URL Type Details</h2>
+    
+    <div class="d-flex flex-wrap">
+      <div class="search-container me-3">
+        <input type="text" class="search-field" placeholder="Search URLs..." id="urlSearch">
+        <i class="fas fa-search search-icon"></i>
+      </div>
+      
+      <a href="#" class="export-btn">
+        <i class="fas fa-file-export"></i> Export Data
+      </a>
     </div>
+  </div>
+  
+  {% if list_objects %}
+  <div class="url-table-wrapper">
+    <table class="url-table" id="urlTable">
+      <thead>
+        <tr>
+          <th width="60%">URL Name</th>
+          <th width="40%">Prediction</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for object in list_objects %}
+        <tr>
+          <td>
+            <div class="url-content">{{ object.urlname }}</div>
+          </td>
+          <td>
+            <div class="prediction-value">{{ object.Prediction }}</div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="pagination-wrapper">
+    <nav aria-label="URL pagination">
+      <ul class="pagination">
+        <li class="page-item disabled">
+          <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+            <i class="fas fa-chevron-left"></i>
+          </a>
+        </li>
+        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+          <a class="page-link" href="#">
+            <i class="fas fa-chevron-right"></i>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  {% else %}
+  <div class="no-data">
+    <i class="fas fa-link-slash"></i>
+    <h3>No URLs Found</h3>
+    <p>There are currently no URL records in the system.</p>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Search functionality
+    const searchField = document.getElementById('urlSearch');
+    const table = document.getElementById('urlTable');
+    
+    if (searchField && table) {
+      searchField.addEventListener('keyup', function() {
+        const searchValue = this.value.toLowerCase();
+        const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+        
+        for (let i = 0; i < rows.length; i++) {
+          const rowText = rows[i].textContent.toLowerCase();
+          rows[i].style.display = rowText.includes(searchValue) ? '' : 'none';
+        }
+      });
+    }
+  });
+</script>
+
 {% endblock %}
-    <tr>

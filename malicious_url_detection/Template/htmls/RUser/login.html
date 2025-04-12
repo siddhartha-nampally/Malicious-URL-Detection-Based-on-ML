@@ -1,130 +1,406 @@
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 {% load static %}
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head>
-<title>Login</title>
-
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-
-  <link rel="stylesheet"  type="text/css" href="{% static 'style.css'%} "  />
-<link rel="stylesheet"   type="text/css" href="{% static 'coin-slider.css'%}" />
-
-<script type="text/javascript" src="{% static 'cufon-yui.js'%} "></script>
-<script type="text/javascript" src="{% static 'cufon-aller.js'%}"></script>
-<script type="text/javascript" src="{% static 'jquery-1.4.2.min.js'%}"></script>
-<script type="text/javascript" src="{% static 'script.js'%}"></script>
-<script type="text/javascript" src="{% static 'coin-slider.min.js'%}"></script>
-<style type="text/css">
-<!--
-.style5 {
-	font-size: 24px;
-	color: #FF0000;
-}
-.style12 {font-weight: bold}
-.style13 {font-size: 24px; color: #FF0000; font-weight: bold; }
-.style16 {color: #FF0000}
-.style20 {color: #FF0000; font-weight: bold; }
--->
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Malicious URL Detection - Login</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #4361ee;
+      --secondary-color: #3f37c9;
+      --accent-color: #f72585;
+      --light-color: #f8f9fa;
+      --dark-color: #212529;
+      --gray-color: #6c757d;
+    }
+    
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f8f9fa;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+    }
+    
+    /* Navbar Styling */
+    .navbar {
+      background-color: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 15px 0;
+    }
+    
+    .navbar-brand {
+      font-weight: 700;
+      color: var(--primary-color);
+      font-size: 1.5rem;
+    }
+    
+    .nav-link {
+      font-weight: 500;
+      color: var(--dark-color) !important;
+      margin: 0 10px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    
+    .nav-link:after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      background: var(--accent-color);
+      bottom: 0;
+      left: 0;
+      transition: width 0.3s ease;
+    }
+    
+    .nav-link:hover:after {
+      width: 100%;
+    }
+    
+    .nav-link:hover {
+      color: var(--accent-color) !important;
+    }
+    
+    /* Login Form Styling */
+    .login-section {
+      padding: 80px 0;
+      flex: 1;
+    }
+    
+    .login-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    .login-card {
+      border: none;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card-left {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    
+    .card-right {
+      padding: 40px;
+    }
+    
+    .login-title {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+    
+    .login-subtitle {
+      opacity: 0.8;
+      margin-bottom: 30px;
+    }
+    
+    .login-features {
+      margin-top: 30px;
+    }
+    
+    .login-feature-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+    
+    .login-feature-icon {
+      width: 40px;
+      height: 40px;
+      background-color: rgba(255, 255, 255, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 15px;
+    }
+    
+    .form-title {
+      font-size: 1.5rem;
+      margin-bottom: 25px;
+      color: var(--dark-color);
+    }
+    
+    .form-control {
+      height: 50px;
+      border-radius: 10px;
+      padding-left: 15px;
+      border: 1px solid #e1e1e1;
+      margin-bottom: 20px;
+      font-size: 1rem;
+    }
+    
+    .form-control:focus {
+      box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+      border-color: var(--primary-color);
+    }
+    
+    .login-btn {
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      border: none;
+      height: 50px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(67, 97, 238, 0.2);
+      margin-top: 10px;
+    }
+    
+    .login-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 7px 15px rgba(67, 97, 238, 0.3);
+      background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
+    }
+    
+    .register-link {
+      margin-top: 20px;
+      text-align: center;
+    }
+    
+    .register-btn {
+      background-color: transparent;
+      border: 2px solid var(--primary-color);
+      color: var(--primary-color);
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+    
+    .register-btn:hover {
+      background-color: var(--primary-color);
+      color: white;
+      transform: translateY(-3px);
+    }
+    
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 20px 0;
+    }
+    
+    .divider span {
+      flex: 1;
+      height: 1px;
+      background-color: #e1e1e1;
+    }
+    
+    .divider p {
+      margin: 0 15px;
+      color: var(--gray-color);
+    }
+    
+    /* Footer */
+    .footer {
+      background-color: var(--dark-color);
+      color: white;
+      padding: 20px 0;
+    }
+    
+    .copyright {
+      color: rgba(255, 255, 255, 0.5);
+      text-align: center;
+      margin: 0;
+    }
+    
+    /* Animation Classes */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .animate-fade-in-up {
+      animation: fadeInUp 0.5s ease forwards;
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 991.98px) {
+      .card-left {
+        padding: 30px;
+      }
+      
+      .card-right {
+        padding: 30px;
+      }
+    }
+    
+    @media (max-width: 767.98px) {
+      .login-section {
+        padding: 40px 0;
+      }
+      
+      .card-left {
+        border-radius: 15px 15px 0 0;
+        padding: 30px;
+      }
+      
+      .login-container .row {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
 <body>
-<div class="main">
-  <div class="header">
-    <div class="header_resize">
-      <div class="menu_nav">
-        <p>&nbsp;</p>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'index' %}">
+        <i class="fas fa-shield-alt me-2"></i>SecureURL
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'index' %}">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="{% url 'login' %}">User Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'serviceproviderlogin' %}">Service Provider</a>
+          </li>
+        </ul>
       </div>
-      <div class="mainbar">
-        <h1 align="center"><a href="index.html"><span class="content style5">Malicious URL Detection based on Machine Learning</span></a></h1>
-
-        <div class="tab-content tab-space">
-            <div class="tab-pane active" id="preview-alerts">
-
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-        <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script><link href="https://unpkg.com/soft-ui-design-system@1.0.1/assets/css/soft-design-system.min.css" rel="stylesheet" /><div class="container py-5">
-  <div class="row">
-    <div class="alert alert-primary text-white font-weight-bold" role="alert">
-     <p align="center"><span class="active"><span class="style12"><a href="{% url 'index' %}">Home|  </a><a href="{% url 'login' %}">Remote User </a>|<a href="{% url 'serviceproviderlogin' %}"> Service Provider </a></span></span></p>
     </div>
-    <div>
-</div>
+  </nav>
 
-        <img src="{% static 'Banner.jpg'%}" width="1297" height="355" alt="" class="fl" />      </div>
-      <div class="clr"></div>
-      <div class="slider">
-        
-      </div>
-      <div class="clr"></div>
-    </div>
-  </div>
-  <div class="content">
-    <div class="content_resize">
-      <div class="mainbar">
-        <div class="article">
-          <h2 align="center" class="style13">malicious URL detection; feature extraction; feature selection; machine learning.</h2>
-          <div class="img">
-            <div align="center"><form method="POST" role="form">
-							{% csrf_token %}
-
-						<fieldset>
-                             {% load static %}
-						<img src="{% static '/login.jpg' %}" alt="My image">
-							<p class="style5"> Login Using Your Account: </p>
-
-						<div class="form-group">
-								<input type="text" name="username"   placeholder="User Name" required>
-
-								<br />
-						      <br />
-						</div>
-						<div class="form-group">
-								<input type="password" name="password"   placeholder="Password" required>
-							</div>
-							<div>
-							  <p>
-								  <input type="submit" name="submit1"  class="btn btn-md" value="Login">
-								  <br />
-							    </p>
-							</div>
-							<div>
-
-							<button>
-							<span class="style16"><strong>Are You New User !!</strong></span><span class="style20">! </span><a href="{% url 'Register1' %}">REGISTER</a></button>
-                                
-							</div>
- 						</fieldset>
-				</form></div>
+  <!-- Login Section -->
+  <section class="login-section">
+    <div class="container login-container">
+      <div class="card login-card">
+        <div class="row g-0">
+          <div class="col-md-5 card-left">
+            <div class="animate-fade-in-up" style="animation-delay: 0.1s;">
+              <h2 class="login-title">Welcome Back!</h2>
+              <p class="login-subtitle">Access your account to analyze and detect malicious URLs with our advanced machine learning system.</p>
+              
+              <div class="login-features">
+                <div class="login-feature-item">
+                  <div class="login-feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                  </div>
+                  <div>
+                    <h5 class="mb-0">Advanced Protection</h5>
+                    <p class="mb-0 small">Real-time URL analysis</p>
+                  </div>
+                </div>
+                
+                <div class="login-feature-item">
+                  <div class="login-feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                  </div>
+                  <div>
+                    <h5 class="mb-0">Detailed Reports</h5>
+                    <p class="mb-0 small">Comprehensive threat analysis</p>
+                  </div>
+                </div>
+                
+                <div class="login-feature-item">
+                  <div class="login-feature-icon">
+                    <i class="fas fa-brain"></i>
+                  </div>
+                  <div>
+                    <h5 class="mb-0">ML Powered</h5>
+                    <p class="mb-0 small">Smart detection algorithms</p>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-
-            <div class="mainbar">
-
-
-        <div class="tab-content tab-space">
-            <div class="tab-pane active" id="preview-alerts">
-
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-        <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script><link href="https://unpkg.com/soft-ui-design-system@1.0.1/assets/css/soft-design-system.min.css" rel="stylesheet" /><div class="container py-5">
-  <div class="row">
-    <div class="alert alert-primary text-white font-weight-bold" role="alert">
-     <p align="center"><span class="active"><span class="style12"><a href="{% url 'login' %}">Home|  </a><a href="{% url 'login' %}">Remote User </a>|<a href="{% url 'serviceproviderlogin' %}"> Service Provider </a></span></span></p>
-    </div>
-    <div>
-</div>
-          <div class="post_content"></div>
-          <div class="clr"></div>
+          
+          <div class="col-md-7 card-right">
+            <div class="animate-fade-in-up" style="animation-delay: 0.2s;">
+              <h3 class="form-title text-center">Sign in to your account</h3>
+              
+              <form method="POST" role="form">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                  <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0">
+                      <i class="fas fa-user text-muted"></i>
+                    </span>
+                    <input type="text" name="username" class="form-control border-start-0" placeholder="Username" required>
+                  </div>
+                </div>
+                
+                <div class="mb-3">
+                  <div class="input-group">
+                    <span class="input-group-text bg-light border-end-0">
+                      <i class="fas fa-lock text-muted"></i>
+                    </span>
+                    <input type="password" name="password" class="form-control border-start-0" placeholder="Password" required>
+                  </div>
+                </div>
+                
+                <div class="d-grid">
+                  <button type="submit" name="submit1" class="btn btn-primary login-btn">
+                    Sign In <i class="fas fa-sign-in-alt ms-2"></i>
+                  </button>
+                </div>
+              </form>
+              
+              <div class="divider">
+                <span></span>
+                <p>or</p>
+                <span></span>
+              </div>
+              
+              <div class="register-link">
+                <p class="mb-2 text-center">Don't have an account?</p>
+                <a href="{% url 'Register1' %}" class="register-btn">
+                  <i class="fas fa-user-plus me-2"></i> Create Account
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="sidebar">
-        <div class="searchform"></div>
-        <div class="clr"></div>
-      </div>
-      <div class="clr"></div>
     </div>
-  </div>
-  <div class="fbg"></div>
-  <div class="footer"></div>
-</div>
-<div align=center></div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <p class="copyright">&copy; 2025 SecureURL. All rights reserved. | Malicious URL Detection System</p>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

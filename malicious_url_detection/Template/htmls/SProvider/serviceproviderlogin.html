@@ -1,94 +1,286 @@
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-{% load static %}
 <!DOCTYPE html>
-
+{% load static %}
 <html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Service Provider Login | SecureURL</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <!-- AOS Animation Library -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #4361ee;
+      --secondary-color: #3f37c9;
+      --accent-color: #f72585;
+      --light-color: #f8f9fa;
+      --dark-color: #212529;
+      --gray-color: #6c757d;
+    }
+    
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, rgba(67, 97, 238, 0.9), rgba(63, 55, 201, 0.9)), url("{% static 'bg.jpg' %}");
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+    }
+    
+    /* Navbar */
+    .navbar {
+      background-color: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 15px 0;
+    }
+    
+    .navbar-brand {
+      font-weight: 700;
+      color: var(--primary-color);
+      font-size: 1.5rem;
+    }
+    
+    /* Login Form */
+    .login-container {
+      background-color: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+      margin: 40px 0;
+    }
+    
+    .login-header {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      color: white;
+      padding: 25px;
+      text-align: center;
+    }
+    
+    .login-header h1 {
+      font-weight: 800;
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+    }
+    
+    .login-header p {
+      opacity: 0.8;
+      margin-bottom: 0;
+    }
+    
+    .login-body {
+      padding: 40px;
+    }
+    
+    .login-image {
+      background-color: var(--light-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 30px;
+    }
+    
+    .login-image img {
+      max-width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .form-floating {
+      margin-bottom: 20px;
+    }
+    
+    .form-floating .form-control {
+      border-radius: 8px;
+      height: 60px;
+      border: 2px solid #e9ecef;
+    }
+    
+    .form-floating .form-control:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
+    }
+    
+    .form-floating label {
+      padding: 1rem 0.75rem;
+    }
+    
+    .btn-login {
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border: none;
+      border-radius: 50px;
+      padding: 12px 30px;
+      font-weight: 600;
+      color: white;
+      box-shadow: 0 4px 15px rgba(67, 97, 238, 0.2);
+      width: 100%;
+      height: 50px;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-login:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 7px 15px rgba(67, 97, 238, 0.3);
+    }
+    
+    .btn-user-login {
+      background-color: var(--accent-color);
+      border: none;
+      border-radius: 50px;
+      padding: 12px 30px;
+      font-weight: 600;
+      color: white;
+      box-shadow: 0 4px 15px rgba(247, 37, 133, 0.2);
+      width: 100%;
+      height: 50px;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .btn-user-login:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 7px 15px rgba(247, 37, 133, 0.3);
+      color: white;
+    }
+    
+    .login-footer {
+      padding: 20px 40px;
+      background-color: rgba(248, 249, 250, 0.6);
+      text-align: center;
+      border-top: 1px solid #e9ecef;
+    }
+    
+    .login-footer p {
+      margin-bottom: 0;
+      color: var(--gray-color);
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 991.98px) {
+      .login-image {
+        padding: 20px;
+      }
+      
+      .login-body {
+        padding: 30px;
+      }
+    }
+    
+    @media (max-width: 767.98px) {
+      .login-container {
+        margin: 20px 0;
+      }
+      
+      .login-header h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'index' %}">
+        <i class="fas fa-shield-alt me-2"></i>SecureURL
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'index' %}">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}">User Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="{% url 'serviceproviderlogin' %}">Service Provider</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
 
-	<title>Login</title>
+  <!-- Login Section -->
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <div class="login-container" data-aos="fade-up">
+          <div class="login-header">
+            <h1><i class="fas fa-shield-alt me-2"></i>Malicious URL Detection</h1>
+            <p>Machine Learning-based system for identifying harmful websites</p>
+          </div>
+          
+          <div class="row g-0">
+            <div class="col-md-6 login-image d-none d-md-flex">
+              <img src="{% static '/login.jpg' %}" class="img-fluid" alt="Login Secure Access">
+            </div>
+            
+            <div class="col-md-6">
+              <div class="login-body">
+                <h3 class="mb-4">Service Provider Login</h3>
+                
+                <form method="POST" role="form">
+                  {% csrf_token %}
+                  
+                  <div class="form-floating mb-4">
+                    <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
+                    <label for="username"><i class="fas fa-user me-2"></i>Username</label>
+                  </div>
+                  
+                  <div class="form-floating mb-4">
+                    <input type="" class="form-control" id="password" name="password" placeholder="Password" required>
+                    <label for="password"><i class="fas fa-lock me-2"></i>Password</label>
+                  </div>
+                  
+                  <button type="submit" name="submit1" class="btn btn-login mb-4">
+                    <i class="fas fa-sign-in-alt me-2"></i>Login
+                  </button>
+                  
+                  <a href="{% url 'login' %}" class="btn btn-user-login">
+                    <i class="fas fa-user-shield me-2"></i>Switch to User Login
+                  </a>
+                </form>
+              </div>
+            </div>
+          </div>
+          
+          <div class="login-footer">
+            <p>Secure machine learning-powered platform for detecting malicious URLs, phishing attempts, and online threats.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-	<head>
-
-<link rel="icon" href="images/icon.png" type="image/x-icon" />
-
-	<link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css?family=Righteous" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css?family=Fredoka+One" rel="stylesheet">
-
-
-
-		<style>
-			body {background: url("{% static 'bg.jpg' %}");
-			background-color:#eee;}
-			.container-fluid {padding:50px;}
-			.container{background-color:white;padding:50px;   }
-			#title{font-family: 'Fredoka One', cursive;
-}
-			.text-uppercase{
-			font-family: 'Righteous', cursive;
-
-			}
-		.style1 {
-	color: #FF0000;
-	font-weight: bold;
-}
-        .style2 {
-	font-family: 'Righteous', cursive;
-	color: #FF0000;
-	font-weight: bold;
-}
-.style5 {
-	color: #FF0099;
-	font-weight: bold;
-}
-        </style>
-	</head>
-	<body>
-	<div class="container-fluid">
-		<div>
-			<h2 class="text-center style1" id="title">Malicious URL Detection based on Machine Learning</h2>
-			 <p class="text-center"> <span class="style5"><small id="passwordHelpInline" class="text-muted">malicious URL detection; feature extraction; feature selection; machine learning.
-
-
-          </small></span> </p>
- 			<hr>
-			<div class="row">
-
-
-				<div class="col-md-2">
-					<!-------null------>
-				</div>
-
-				<div class="col-md-5">
- 				 		<form method="POST" role="form">
-							{% csrf_token %}
-
-						<fieldset>
-                             {% load static %}
-						<img src="{% static '/login.jpg' %}" alt="My image">
-							<p class="style2"> Login Service Provider: </p>
-
-							<div class="form-group">
-								<input type="text" name="username"   placeholder="User Name" required>
-							</div>
-							<div class="form-group">
-								<input type="password" name="password"   placeholder="Password" required>
-							</div>
-							<div>
-								<input type="submit" name="submit1"  class="btn btn-md" value="Login">
-							</div>
- 						</fieldset>
-						<br><br>
-						<button class="btn btn-lg "><a href="{% url 'login' %}">User Login</a></button> 
-				</form>
-				</div>
-			</div>
-		</div>
-
-	</div>
-	</body>
-
-
+  <!-- Bootstrap JS Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- AOS Animation Library -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    // Initialize AOS animations
+    AOS.init({
+      once: true,
+      duration: 800
+    });
+  </script>
+</body>
 </html>

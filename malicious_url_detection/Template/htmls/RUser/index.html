@@ -1,105 +1,506 @@
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 {% load static %}
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en">
 <head>
-<title>Home Page</title>
-
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-
-  <link rel="stylesheet"  type="text/css" href="{% static 'style.css'%} "  />
-<link rel="stylesheet"   type="text/css" href="{% static 'coin-slider.css'%}" />
-
-<script type="text/javascript" src="{% static 'cufon-yui.js'%} "></script>
-<script type="text/javascript" src="{% static 'cufon-aller.js'%}"></script>
-<script type="text/javascript" src="{% static 'jquery-1.4.2.min.js'%}"></script>
-<script type="text/javascript" src="{% static 'script.js'%}"></script>
-<script type="text/javascript" src="{% static 'coin-slider.min.js'%}"></script>
-<style type="text/css">
-<!--
-.style5 {
-	font-size: 24px;
-	color: #FF0000;
-}
-.style12 {font-weight: bold}
-.style13 {font-size: 24px; color: #FF0000; font-weight: bold; }
-.style16 {
-	color: #FF0000;
-	font-weight: bold;
-}
--->
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Malicious URL Detection - Home</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <!-- AOS Animation Library -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #4361ee;
+      --secondary-color: #3f37c9;
+      --accent-color: #f72585;
+      --light-color: #f8f9fa;
+      --dark-color: #212529;
+      --gray-color: #6c757d;
+    }
+    
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f8f9fa;
+      color: var(--dark-color);
+      overflow-x: hidden;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+    }
+    
+    /* Navbar Styling */
+    .navbar {
+      background-color: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      padding: 15px 0;
+    }
+    
+    .navbar-brand {
+      font-weight: 700;
+      color: var(--primary-color);
+      font-size: 1.5rem;
+    }
+    
+    .nav-link {
+      font-weight: 500;
+      color: var(--dark-color) !important;
+      margin: 0 10px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    
+    .nav-link:after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      background: var(--accent-color);
+      bottom: 0;
+      left: 0;
+      transition: width 0.3s ease;
+    }
+    
+    .nav-link:hover:after {
+      width: 100%;
+    }
+    
+    .nav-link:hover {
+      color: var(--accent-color) !important;
+    }
+    
+    /* Hero Section */
+    .hero-section {
+      background: linear-gradient(135deg, rgba(67, 97, 238, 0.9), rgba(63, 55, 201, 0.9)), url("{% static 'img1.jpg' %}");
+      background-size: cover;
+      background-position: center;
+      color: white;
+      padding: 80px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+    
+    .hero-title {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 20px;
+      line-height: 1.2;
+    }
+    
+    .hero-subtitle {
+      font-size: 1.25rem;
+      margin-bottom: 30px;
+      opacity: 0.9;
+    }
+    
+    .btn-primary {
+      background-color: var(--accent-color);
+      border-color: var(--accent-color);
+      padding: 12px 30px;
+      border-radius: 50px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(247, 37, 133, 0.2);
+    }
+    
+    .btn-primary:hover {
+      background-color: #e5116c;
+      border-color: #e5116c;
+      transform: translateY(-3px);
+      box-shadow: 0 7px 15px rgba(247, 37, 133, 0.3);
+    }
+    
+    .btn-outline-light {
+      border-radius: 50px;
+      padding: 12px 30px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    .btn-outline-light:hover {
+      background-color: white;
+      color: var(--primary-color);
+      transform: translateY(-3px);
+    }
+    
+    /* Features Section */
+    .features-section {
+      padding: 80px 0;
+      background-color: white;
+    }
+    
+    .feature-card {
+      padding: 30px;
+      border-radius: 12px;
+      background-color: white;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      height: 100%;
+      transition: all 0.3s ease;
+      border-bottom: 3px solid transparent;
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+      border-bottom: 3px solid var(--primary-color);
+    }
+    
+    .feature-icon {
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 25px;
+      color: white;
+      font-size: 1.8rem;
+    }
+    
+    .feature-title {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      color: var(--dark-color);
+    }
+    
+    .feature-description {
+      color: var(--gray-color);
+      margin-bottom: 0;
+    }
+    
+    /* About Section */
+    .about-section {
+      padding: 80px 0;
+      background-color: #f8f9fa;
+    }
+    
+    .section-title {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      color: var(--dark-color);
+      position: relative;
+      display: inline-block;
+    }
+    
+    .section-title:after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: var(--accent-color);
+    }
+    
+    .section-subtitle {
+      color: var(--gray-color);
+      margin-bottom: 40px;
+      font-size: 1.1rem;
+    }
+    
+    /* Footer */
+    .footer {
+      background-color: var(--dark-color);
+      color: white;
+      padding: 40px 0 20px;
+    }
+    
+    .footer-links h5 {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      position: relative;
+      padding-bottom: 10px;
+    }
+    
+    .footer-links h5:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 40px;
+      height: 2px;
+      background: var(--accent-color);
+    }
+    
+    .footer-links ul {
+      list-style: none;
+      padding-left: 0;
+    }
+    
+    .footer-links li {
+      margin-bottom: 10px;
+    }
+    
+    .footer-links a {
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    
+    .footer-links a:hover {
+      color: var(--accent-color);
+      text-decoration: none;
+    }
+    
+    .copyright {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 20px;
+      margin-top: 40px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+    
+    /* Animation Classes */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    
+    .fade-up.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    /* Responsive Adjustments */
+    @media (max-width: 991.98px) {
+      .hero-title {
+        font-size: 2.5rem;
+      }
+      
+      .feature-card {
+        margin-bottom: 30px;
+      }
+    }
+    
+    @media (max-width: 767.98px) {
+      .hero-title {
+        font-size: 2rem;
+      }
+      
+      .section-title {
+        font-size: 2rem;
+      }
+      
+      .hero-section {
+        padding: 60px 0;
+      }
+    }
+  </style>
 </head>
 <body>
-<div class="main">
-  <div class="header">
-    <div class="header_resize">
-      <div class="menu_nav">
-        <p>&nbsp;</p>
+  <!-- Navigation Bar -->
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <div class="container">
+      <a class="navbar-brand" href="{% url 'index' %}">
+        <i class="fas fa-shield-alt me-2"></i>SecureURL
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+              aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link active" href="{% url 'index' %}">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'login' %}">User Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'serviceproviderlogin' %}">Service Provider</a>
+          </li>
+        </ul>
       </div>
-      <div class="mainbar">
-        <h1 align="center"><a href="index.html"><span class="content style5">Malicious URL Detection based on Machine Learning</span></a></h1>
-
-
-
-        <div class="tab-content tab-space">
-            <div class="tab-pane active" id="preview-alerts">
-
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-        <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script><link href="https://unpkg.com/soft-ui-design-system@1.0.1/assets/css/soft-design-system.min.css" rel="stylesheet" /><div class="container py-5">
-  <div class="row">
-    <div class="alert alert-primary text-white font-weight-bold" role="alert">
-     <p align="center"><span class="active"><span class="style12"><a href="{% url 'index' %}">Home|  </a><a href="{% url 'login' %}">Remote User </a>|<a href="{% url 'serviceproviderlogin' %}"> Service Provider </a></span></span></p>
     </div>
-    <div>
-</div>
+  </nav>
 
-
-
-        <img src="{% static 'Banner.jpg'%}" width="1297" height="421" alt="" class="fl" />      </div>
-      <div class="clr"></div>
-      <div class="slider">
-        
-      </div>
-      <div class="clr"></div>
-    </div>
-  </div>
-  <div class="content">
-    <div class="content_resize">
-      <div class="mainbar">
-        <div class="article">
-          <h2 align="center" class="style13">malicious URL detection; feature extraction; feature selection; machine learning</h2>
-          <div class="img">
-            <div align="center"><img src="{% static 'img1.jpg'%}" width="630" height="221" alt="" class="fl" /></div>
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6 hero-content" data-aos="fade-right" data-aos-duration="1000">
+          <h1 class="hero-title">Malicious URL Detection System</h1>
+          <p class="hero-subtitle">Advanced machine learning solutions to protect you from harmful websites and phishing attacks.</p>
+          <div class="d-flex flex-wrap gap-3">
+            <a href="{% url 'login' %}" class="btn btn-primary">Get Started <i class="fas fa-arrow-right ms-2"></i></a>
+            <a href="{% url 'serviceproviderlogin' %}" class="btn btn-outline-light">Service Provider Portal</a>
           </div>
-          <div class="post_content">
-            <p align="center" class="style16">Currently, the risk of network information insecurity is increasing rapidly in number and level of danger. The methods mostly used by hackers today is to attack end-to-end technology and exploit human vulnerabilities. These techniques include social engineering, phishing, pharming, etc. One of the steps in conducting these attacks is to deceive users with malicious Uniform Resource Locators (URLs). As a results, malicious URL detection is of great interest nowadays. There have been several scientific studies showing a number of methods to detect malicious URLs based on machine learning and deep learning techniques. In this paper, we propose a malicious URL detection method using machine learning techniques based on our proposed URL behaviors and attributes. Moreover, bigdata technology is also exploited to improve the capability of detection malicious URLs based on abnormal behaviors. In short, the proposed detection system consists of a new set of URLs features and behaviors, a machine learning algorithm, and a bigdata technology. The experimental results show that the proposed URL attributes and behavior can help improve the ability to detect malicious URL significantly. This is suggested that the proposed system may be considered as an optimized and friendly used solution for malicious URL detection..</p>
+        </div>
+        <div class="col-lg-6" data-aos="fade-left" data-aos-duration="1000" data-aos-delay="200">
+          <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" class="img-fluid d-none">
+          <!-- We'll replace this with a custom graphic in production -->
+          <div class="text-center">
+            <img src="{% static 'img1.jpg' %}" class="img-fluid rounded-lg shadow-lg" alt="Malicious URL Detection" style="max-height: 400px;">
           </div>
-
-        <div class="tab-content tab-space">
-            <div class="tab-pane active" id="preview-alerts">
-
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
-        <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script><link href="https://unpkg.com/soft-ui-design-system@1.0.1/assets/css/soft-design-system.min.css" rel="stylesheet" /><div class="container py-5">
-  <div class="row">
-    <div class="alert alert-primary text-white font-weight-bold" role="alert">
-     <p align="center"><span class="active"><span class="style12"><a href="{% url 'login' %}">Home|  </a><a href="{% url 'login' %}">Remote User </a>|<a href="{% url 'serviceproviderlogin' %}"> Service Provider </a></span></span></p>
-    </div>
-    <div>
-</div>
-          <div class="clr"></div>
         </div>
       </div>
-      <div class="sidebar">
-        <div class="searchform"></div>
-        <div class="clr"></div>
-      </div>
-      <div class="clr"></div>
     </div>
-  </div>
-  <div class="fbg"></div>
-  <div class="footer"></div>
-</div>
-<div align=center></div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features-section">
+    <div class="container">
+      <div class="text-center mb-5">
+        <h2 class="section-title text-center" data-aos="fade-up">How It Works</h2>
+        <p class="section-subtitle text-center" data-aos="fade-up" data-aos-delay="100">Our advanced system analyzes URLs to detect potential threats.</p>
+      </div>
+      
+      <div class="row">
+        <div class="col-md-4 mb-4 mb-md-0" data-aos="fade-up" data-aos-delay="200">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-search"></i>
+            </div>
+            <h3 class="feature-title">URL Analysis</h3>
+            <p class="feature-description">We analyze URL structure, domain information, and content to identify suspicious patterns.</p>
+          </div>
+        </div>
+        
+        <div class="col-md-4 mb-4 mb-md-0" data-aos="fade-up" data-aos-delay="300">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-brain"></i>
+            </div>
+            <h3 class="feature-title">Machine Learning</h3>
+            <p class="feature-description">Our system uses advanced machine learning algorithms trained on malicious URL datasets.</p>
+          </div>
+        </div>
+        
+        <div class="col-md-4" data-aos="fade-up" data-aos-delay="400">
+          <div class="feature-card">
+            <div class="feature-icon">
+              <i class="fas fa-shield-alt"></i>
+            </div>
+            <h3 class="feature-title">Real-time Protection</h3>
+            <p class="feature-description">Get instant feedback on whether a URL is safe or potentially harmful before clicking.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="about-section">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-6 mb-5 mb-lg-0" data-aos="fade-right">
+          <h2 class="section-title">About Our Technology</h2>
+          <p>Currently, the risk of network information insecurity is increasing rapidly in number and level of danger. The methods mostly used by hackers today is to attack end-to-end technology and exploit human vulnerabilities. These techniques include social engineering, phishing, pharming, etc.</p>
+          <p>One of the steps in conducting these attacks is to deceive users with malicious Uniform Resource Locators (URLs). As a result, malicious URL detection is of great interest nowadays.</p>
+          <p>Our system employs advanced machine learning techniques based on our proprietary URL behavior analysis and attribute extraction. Moreover, bigdata technology is also exploited to improve the capability of detection based on abnormal behaviors.</p>
+        </div>
+        <div class="col-lg-6" data-aos="fade-left">
+          <div class="card border-0 shadow-lg overflow-hidden rounded-lg">
+            <div class="card-body p-0">
+              <div class="bg-primary text-white p-4">
+                <h3 class="mb-0">Key Features</h3>
+              </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item d-flex align-items-center p-3">
+                  <i class="fas fa-check-circle text-success me-3"></i>
+                  <span>Real-time URL classification</span>
+                </li>
+                <li class="list-group-item d-flex align-items-center p-3">
+                  <i class="fas fa-check-circle text-success me-3"></i>
+                  <span>Machine learning-based detection</span>
+                </li>
+                <li class="list-group-item d-flex align-items-center p-3">
+                  <i class="fas fa-check-circle text-success me-3"></i>
+                  <span>Behavior analysis technology</span>
+                </li>
+                <li class="list-group-item d-flex align-items-center p-3">
+                  <i class="fas fa-check-circle text-success me-3"></i>
+                  <span>Comprehensive reporting system</span>
+                </li>
+                <li class="list-group-item d-flex align-items-center p-3">
+                  <i class="fas fa-check-circle text-success me-3"></i>
+                  <span>High accuracy detection rates</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 mb-4 mb-md-0">
+          <div class="footer-links">
+            <h5>SecureURL</h5>
+            <p>Advanced malicious URL detection system powered by machine learning algorithms to keep you safe online.</p>
+          </div>
+        </div>
+        <div class="col-md-2 mb-4 mb-md-0">
+          <div class="footer-links">
+            <h5>Quick Links</h5>
+            <ul>
+              <li><a href="{% url 'index' %}">Home</a></li>
+              <li><a href="{% url 'login' %}">User Login</a></li>
+              <li><a href="{% url 'serviceproviderlogin' %}">Service Provider</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-3 mb-4 mb-md-0">
+          <div class="footer-links">
+            <h5>Resources</h5>
+            <ul>
+              <li><a href="#">Documentation</a></li>
+              <li><a href="#">API Access</a></li>
+              <li><a href="#">Machine Learning</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="footer-links">
+            <h5>Contact</h5>
+            <ul>
+              <li><i class="fas fa-envelope me-2"></i> info@secureurl.com</li>
+              <li><i class="fas fa-phone me-2"></i> +1 (555) 123-4567</li>
+              <li><i class="fas fa-map-marker-alt me-2"></i> 123 Security St, Cyber City</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="text-center copyright">
+        <p>&copy; 2025 SecureURL. All rights reserved. | Malicious URL Detection System</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap JS Bundle with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- AOS Animation Library -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script>
+    // Initialize AOS animations
+    AOS.init();
+    
+    // Add active class to elements for animation on scroll
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(function() {
+        const fadeElements = document.querySelectorAll('.fade-up');
+        fadeElements.forEach(element => {
+          element.classList.add('active');
+        });
+      }, 300);
+    });
+  </script>
 </body>
 </html>

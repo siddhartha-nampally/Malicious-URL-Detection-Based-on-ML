@@ -1,77 +1,322 @@
 {% extends 'SProvider/Header.html' %}
 {% block researchblock %}
 
-<link rel="icon" href="images/icon.png" type="image/x-icon" />
+<style>
+  .remote-users-container {
+    padding: 20px 0;
+  }
+  
+  .section-header {
+    margin-bottom: 25px;
+    position: relative;
+    padding-bottom: 15px;
+    display: inline-block;
+  }
+  
+  .section-header:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: var(--accent-color);
+  }
+  
+  .users-table-wrapper {
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  }
+  
+  .users-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 0;
+  }
+  
+  .users-table th {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    padding: 15px;
+    letter-spacing: 0.5px;
+    border: none;
+    text-align: left;
+  }
+  
+  .users-table td {
+    padding: 15px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    color: var(--dark-color);
+    background-color: white;
+    font-size: 0.95rem;
+    vertical-align: middle;
+  }
+  
+  .users-table tr:last-child td {
+    border-bottom: none;
+  }
+  
+  .users-table tbody tr {
+    transition: all 0.2s ease;
+  }
+  
+  .users-table tbody tr:hover {
+    background-color: rgba(67, 97, 238, 0.03);
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    background-color: var(--primary-color);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: 600;
+    margin-right: 10px;
+    font-size: 1rem;
+  }
+  
+  .no-data {
+    padding: 50px;
+    text-align: center;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  }
+  
+  .no-data i {
+    font-size: 3rem;
+    color: var(--gray-color);
+    margin-bottom: 15px;
+    opacity: 0.5;
+  }
+  
+  .pagination-wrapper {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .page-link {
+    color: var(--primary-color);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    margin: 0 3px;
+  }
+  
+  .page-link:hover {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+  }
+  
+  .page-item.active .page-link {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+  }
+  
+  /* Search field */
+  .search-container {
+    margin-bottom: 20px;
+    position: relative;
+  }
+  
+  .search-field {
+    width: 100%;
+    padding: 12px 20px;
+    padding-right: 40px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50px;
+    outline: none;
+    transition: all 0.3s ease;
+  }
+  
+  .search-field:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+  }
+  
+  .search-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-color);
+  }
+  
+  /* Card header with actions */
+  .card-header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+  }
+  
+  .export-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 50px;
+    padding: 8px 20px;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    border: none;
+    transition: all 0.3s ease;
+  }
+  
+  .export-btn:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+  }
+  
+  .export-btn i {
+    margin-right: 8px;
+  }
+  
+  /* Responsive table */
+  @media (max-width: 991.98px) {
+    .users-table-wrapper {
+      overflow-x: auto;
+    }
+    
+    .users-table th,
+    .users-table td {
+      padding: 12px;
+    }
+  }
+  
+  @media (max-width: 767.98px) {
+    .card-header-actions {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    
+    .section-header {
+      margin-bottom: 15px;
+    }
+    
+    .export-btn {
+      margin-top: 10px;
+    }
+    
+    .search-container {
+      width: 100%;
+      margin-bottom: 15px;
+    }
+  }
+</style>
 
-	<link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
-		<link href="https://fonts.googleapis.com/css?family=Righteous" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css?family=Fredoka+One" rel="stylesheet">
-
-
-
-		<style>
-			body {background-color:#000000;}
-			.container-fluid {padding:50px;}
-			.container{background-color:white;padding:50px;   }
-			#title{font-family: 'Fredoka One', cursive;
-}
-			.text-uppercase{
-			font-family: 'Righteous', cursive;
-
-			}
-			input{
-			font-family:'Russo One', sans-serif;
-			font-size:15px;
-			}
-
-		.style1 {color: #FF0000}
-        </style>
-
-	<body>
-	<div class="container-fluid">
-		<div class="container">
-
-			<div class="row">
-				<div class="col-md-5">
- 					<form role="form" method="POST" >
-						{% csrf_token %}
-						<fieldset>
-							<p class="text-uppercase pull-center style1">VIEW ALL REMOTE USERS !!! </p>
-                            <div class="viewclients">
-							  <table>
-								<tr>
-									<th bgcolor="#FF0000" style="color:yellow">USER NAME</th>
-									<th bgcolor="#FF0000" style="color:yellow">EMAIL</th>
-									<th bgcolor="#FF0000" style="color:yellow">Gender</th>
-									<th bgcolor="#FF0000" style="color:yellow">Address</th>
-									<th bgcolor="#FF0000" style="color:yellow">Mob No</th>
-									<th bgcolor="#FF0000" style="color:yellow">Country</th>
-									<th bgcolor="#FF0000" style="color:yellow">State</th>
-									<th bgcolor="#FF0000" style="color:yellow">City</th>
-								</tr>
-								<tr>
-								{% for o in objects %}
-									<td bgcolor="#FFFFFF" style="color:white"><span class="style1">{{o.username}}</span></td>
-									<td bgcolor="#FFFFFF" style="color:white"><span class="style1">{{o.email}}</span></td>
-									<td bgcolor="#FFFFFF" style="color:white"><span class="style1">{{o.gender}}</span></td>
-									<td bgcolor="#FFFFFF" style="color:white"><span class="style1">{{o.address}}</span></td>
-									<td bgcolor="#FFFFFF" style="color:white"><span class="style1">{{o.phoneno}}</span></td>
-									<td bgcolor="#FFFFFF" style="color:white"><span class="style1">{{o.country}}</span></td>
-									<td bgcolor="#FFFFFF" style="color:white"><span class="style1">{{o.state}}</span></td>
-									<td bgcolor="#FFFFFF" style="color:white"><span class="style1">{{o.city}}</span></td>
-								</tr>
-								{% endfor %}
-							</table>
-
-						</div>
-					  </fieldset>
-					</form>
-				</div>
-
-				<div class="col-md-2">
-					<!-------null------>
-				</div>
-            </div>
-        </div>
+<div class="remote-users-container">
+  <div class="card-header-actions">
+    <h2 class="section-header">Remote Users</h2>
+    
+    <div class="search-container">
+      <input type="text" class="search-field" placeholder="Search users..." id="userSearch">
+      <i class="fas fa-search search-icon"></i>
     </div>
+    
+    <button class="export-btn">
+      <i class="fas fa-file-export"></i> Export Data
+    </button>
+  </div>
+  
+  {% if objects %}
+  <div class="users-table-wrapper">
+    <table class="users-table" id="usersTable">
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Email</th>
+          <th>Gender</th>
+          <th>Contact</th>
+          <th>Location</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for o in objects %}
+        <tr>
+          <td>
+            <div class="user-info">
+              <div class="user-avatar">
+                {{ o.username|slice:":1"|upper }}
+              </div>
+              <span>{{ o.username }}</span>
+            </div>
+          </td>
+          <td>{{ o.email }}</td>
+          <td>{{ o.gender }}</td>
+          <td>
+            <div>{{ o.phoneno }}</div>
+            <small class="text-muted">{{ o.address }}</small>
+          </td>
+          <td>
+            <div>{{ o.city }}, {{ o.state }}</div>
+            <small class="text-muted">{{ o.country }}</small>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  
+  <div class="pagination-wrapper">
+    <nav aria-label="User pagination">
+      <ul class="pagination">
+        <li class="page-item disabled">
+          <a class="page-link" href="#" tabindex="-1" aria-disabled="true">
+            <i class="fas fa-chevron-left"></i>
+          </a>
+        </li>
+        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+        <li class="page-item"><a class="page-link" href="#">2</a></li>
+        <li class="page-item"><a class="page-link" href="#">3</a></li>
+        <li class="page-item">
+          <a class="page-link" href="#">
+            <i class="fas fa-chevron-right"></i>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  {% else %}
+  <div class="no-data">
+    <i class="fas fa-users-slash"></i>
+    <h3>No Users Found</h3>
+    <p>There are currently no registered remote users in the system.</p>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Search functionality
+    const searchField = document.getElementById('userSearch');
+    const table = document.getElementById('usersTable');
+    
+    if (searchField && table) {
+      searchField.addEventListener('keyup', function() {
+        const searchValue = this.value.toLowerCase();
+        const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+        
+        for (let i = 0; i < rows.length; i++) {
+          const rowText = rows[i].textContent.toLowerCase();
+          rows[i].style.display = rowText.includes(searchValue) ? '' : 'none';
+        }
+      });
+    }
+  });
+</script>
+
 {% endblock %}
